@@ -20,6 +20,7 @@ public class EdgeDetection {
 		FloatImage imageCanny = new CannyDericheFilter().processDeriche(byteImage, 0.5f);
 		
 		//Process gradients
+		//TODO: Use gradients from cannyDeriche
 		ByteImage[] gradients = Utils.getGradients(byteImage);
 		
 		for (int i = 0; i < imageCanny.getWidth(); i++) {

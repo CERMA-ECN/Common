@@ -1,22 +1,25 @@
 package fr.ecn.common.core.segmentdetection;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
 import fr.ecn.common.core.geometry.Distance;
 import fr.ecn.common.core.geometry.Line;
 import fr.ecn.common.core.geometry.Point;
+import fr.ecn.common.core.geometry.Segment;
 
-public class RansacLineDetection {
+public class RansacSegmentDetection {
 	
-	private List<Line> lines = new LinkedList<Line>();
+	private List<Segment> segments = new LinkedList<Segment>();
 	
-	public RansacLineDetection(List<Edgel> edgels, double stopThreshold, int maxIterations, double maxDistance, double maxAngle, int minPointNumber) {
+	public RansacSegmentDetection(List<Edgel> edgels, double stopThreshold, int maxIterations, double maxDistance, double maxAngle, int minPointNumber) {
 		//Number of points that can be left unfit
 		int maxReaminingEdgelsCount = (int) ((double)edgels.size() * stopThreshold);
 		
 		while(edgels.size() > maxReaminingEdgelsCount) {
-			Line bestLine = null;
+//			Segment bestLine = null;
 			List<Edgel> bestPoints = null;
 //			double bestError = Double.POSITIVE_INFINITY;
 			
@@ -49,15 +52,62 @@ public class RansacLineDetection {
 					
 					if (bestPoints == null || currentEdgels.size() > bestPoints.size()) {
 //					if (error < bestError) {
-						bestLine   = this.linReg(currentEdgels);
+//						bestLine   = this.linReg(currentEdgels);
 //						bestError  = error;
 						bestPoints = currentEdgels;
 					}
 				}
 			}
 			
-			if (bestLine != null) {
-				this.lines.add(bestLine);
+			if (bestPoints != null) {
+				//Cut this line into segments
+				int Xmin = Integer.MAX_VALUE;
+				int Xmax = Integer.MIN_VALUE;
+				int Ymin = Integer.MAX_VALUE;
+				int Ymax = Integer.MIN_VALUE;
+				
+				for (Edgel e : edgels) {
+					if (e.x < Xmin)
+						Xmin = e.x;
+					if (e.x > Xmax)
+						Xmax = e.x;
+					if (e.y < Ymin)
+						Ymin = e.y;
+					if (e.y > Ymax)
+						Ymax = e.y;
+				}
+				
+				Edgel[] sortedEdgels = bestPoints.toArray(new Edgel[0]);
+				if (Xmax - Xmin > Ymax - Ymin) {
+					Arrays.sort(sortedEdgels, new Comparator<Edgel>() {
+						public int compare(Edgel e1, Edgel e2) {
+							return  e1.x - e2.x;
+						}
+					});
+				} else {
+					Arrays.sort(sortedEdgels, new Comparator<Edgel>() {
+						public int compare(Edgel e1, Edgel e2) {
+							return  e1.y - e2.y;
+						}
+					});
+				}
+					
+				Edgel lastEdgel = null;
+				List<Edgel> currentEdgels = null;
+				for (Edgel edgel : sortedEdgels) {
+					if (lastEdgel == null || Distance.distance(new Point(lastEdgel.x, lastEdgel.y), new Point(edgel.x, edgel.y)) > 7.5) {
+						if (currentEdgels != null && currentEdgels.size() > 10) {
+							this.segments.add(this.linReg(currentEdgels));
+						}
+						
+						currentEdgels = new LinkedList<Edgel>();
+					}
+					
+					currentEdgels.add(edgel);
+					lastEdgel = edgel;
+				}
+				
+//				this.segments.add(bestLine);
 				edgels.removeAll(bestPoints);
 			}
 		}
@@ -71,7 +121,7 @@ public class RansacLineDetection {
 		return new Line(a, b);
 	}
 	
-	private Line linReg(List<Edgel> edgels) {
+	private Segment linReg(List<Edgel> edgels) {
 		/**
 		 * Linear regression coefficients
 		 * a, b
@@ -100,6 +150,8 @@ public class RansacLineDetection {
 		 */
 		int Xmin = Integer.MAX_VALUE;
 		int Xmax = Integer.MIN_VALUE;
+		int Ymin = Integer.MAX_VALUE;
+		int Ymax = Integer.MIN_VALUE;
 
 		/**
 		 * Calculate X and Y
@@ -112,6 +164,11 @@ public class RansacLineDetection {
 			} else if (e.x > Xmax){
 				Xmax = e.x;
 			}
+			
+			if (e.y < Ymin)
+				Ymin = e.y;
+			if (e.y > Ymax)
+				Ymax = e.y;
 		}
 		X = X / edgels.size();
 		Y = Y / edgels.size();
@@ -120,10 +177,10 @@ public class RansacLineDetection {
 		 * Calculate num and den
 		 */
 		for (Edgel e : edgels){
-			num = num + (e.x - X) * (e.y - Y);
-			den = den + (e.x - X) * (e.x - X);
+			num += (e.x - X) * (e.y - Y);
+			den += (e.x - X) * (e.x - X);
 		}
-
+		
 		/**
 		 * Calculate a and b
 		 */
@@ -133,13 +190,26 @@ public class RansacLineDetection {
 		/**
 		 * Calculate and modify start and end points
 		 */
-//		Point startPoint = new Point(Xmin, a*Xmin + b);
-//		Point endPoint = new Point(Xmax, a*Xmax + b);
+		Point p1;
+		Point p2;
+		if (Xmax == Xmin) {
+			//Vertical line
+			p1 = new Point(Xmin, Ymin);
+			p2 = new Point(Xmin, Ymax);
+		} else {
+			if (Xmax - Xmin > Ymax - Ymin) {
+				p1 = new Point(Xmin, a*Xmin + b);
+				p2 = new Point(Xmax, a*Xmax + b);
+			} else {
+				p1 = new Point((Ymin-b)/a, Ymin);
+				p2 = new Point((Ymax-b)/a, Ymax);
+			}
+		}
 		
-		return new Line(a, b);
+		return new Segment(p1, p2);
 	}
 
-	public List<Line> getLines() {
-		return lines;
+	public List<Segment> getSegments() {
+		return segments;
 	}
 }

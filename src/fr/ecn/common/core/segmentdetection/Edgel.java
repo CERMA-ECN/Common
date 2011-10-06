@@ -22,5 +22,26 @@ public class Edgel {
 		this.y = y;
 		this.theta = theta;
 	}
+
+	/**
+	 * @return the x
+	 */
+	public int getX() {
+		return x;
+	}
+
+	/**
+	 * @return the y
+	 */
+	public int getY() {
+		return y;
+	}
+
+	/**
+	 * @return the theta
+	 */
+	public double getTheta() {
+		return theta;
+	}
 	
 }

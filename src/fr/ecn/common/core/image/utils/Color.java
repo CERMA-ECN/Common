@@ -40,7 +40,7 @@ public class Color {
 	 * (color >> 16) & 0xFF
 	 */
 	public static int red(int color) {
-		return (color >> 16) & 0xFF;
+		return toSignedByte((byte) ((color >> 16) & 0xFF));
 	}
 
 	/**
@@ -48,7 +48,7 @@ public class Color {
 	 * (color >> 8) & 0xFF
 	 */
 	public static int green(int color) {
-		return (color >> 8) & 0xFF;
+		return toSignedByte((byte) ((color >> 8) & 0xFF));
 	}
 
 	/**
@@ -56,7 +56,17 @@ public class Color {
 	 * color & 0xFF
 	 */
 	public static int blue(int color) {
-		return color & 0xFF;
+		return toSignedByte((byte) (color & 0xFF));
 	}
+	
+    /**
+     * Converts from an unsigned bit field (as stored in an ARGB word
+     * to a signed byte value (that we can do computation on).
+     * @return the signed byte value
+     * @param b the unsigned byte value.
+     */
+    public static byte toSignedByte(byte b) {
+        return (byte) (b + Byte.MIN_VALUE);
+    }
 	
 }
