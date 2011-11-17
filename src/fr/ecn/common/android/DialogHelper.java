@@ -5,7 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 
-public class Dialog {
+public class DialogHelper {
 	
 	public static void errorDialog(final Activity activity, String message) {
 		new AlertDialog.Builder(activity)
