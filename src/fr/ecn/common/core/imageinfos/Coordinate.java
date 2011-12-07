@@ -108,6 +108,38 @@ public class Coordinate implements Serializable {
 		}
 	}
 	
+	/**
+	 * Parse the specified string as a Coordinate object.
+	 * 
+	 * @param coordinate the string representation of the coordinate.
+	 * @return the Coordinate object represented by this string
+	 */
+	public static Coordinate fromString(String coordinate) {
+		String[] coordinateParts = coordinate.split("[°'\"]");
+		
+		int length = coordinateParts.length;
+		String reference;
+		
+		if (coordinateParts[length-1].equals("N") || coordinateParts[length-1].equals("S")
+				|| coordinateParts[length-1].equals("W") || coordinateParts[length-1].equals("E")) {
+			reference = coordinateParts[length-1];
+			length -= 1;
+		} else {
+			throw new IllegalArgumentException("Invalid coordinate String");
+		}
+		
+		switch (length) {
+		case 1:
+			return new Coordinate(Double.parseDouble(coordinateParts[0]), 0, 0, reference);
+		case 2:
+			return new Coordinate(Double.parseDouble(coordinateParts[0]), Double.parseDouble(coordinateParts[1]), 0, reference);
+		case 3:
+			return new Coordinate(Double.parseDouble(coordinateParts[0]), Double.parseDouble(coordinateParts[1]), Double.parseDouble(coordinateParts[2]), reference);
+		default:
+			throw new IllegalArgumentException("Invalid coordinate String");
+		}
+	}
+	
 	public static Coordinate fromDouble(double coordinate, String reference) {
 		double degrees = (int) coordinate;
 		coordinate -= degrees;
