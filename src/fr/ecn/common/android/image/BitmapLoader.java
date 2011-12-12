@@ -6,6 +6,8 @@ import android.graphics.Matrix;
 
 public class BitmapLoader {
 	
+	public static final int maxDim = 600;
+	
 	/**
 	 * Load an image and resize it if its height or width is greater than maxDim
 	 * 

@@ -1,6 +1,6 @@
 package fr.irstv.dataModel;
 
-import android.graphics.Color;
+import fr.ecn.common.core.image.utils.Color;
 
 public class Segment {
 
