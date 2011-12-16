@@ -125,7 +125,7 @@ public class Coordinate implements Serializable {
 			reference = coordinateParts[length-1];
 			length -= 1;
 		} else {
-			throw new IllegalArgumentException("Invalid coordinate String");
+			throw new IllegalArgumentException("Invalid coordinate reference");
 		}
 		
 		switch (length) {

@@ -25,6 +25,7 @@ public class Face implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	protected List<Point> points;
+	
 	protected boolean partial;
 	protected boolean notReal;
 
@@ -75,12 +76,14 @@ public class Face implements Serializable {
 		if (this.isPartial()) {
 			Face face = new Face(false, this.isNotReal());
 			
+			int size = this.points.size();
+			
 			//Add all points expect first and last
-			for (int i=1; i<this.points.size()-1;i++) {
+			for (int i=1; i<size-1;i++) {
 				face.getPoints().add(this.points.get(i));
 			}
 			
-			int size = this.points.size();
+			//Add the intersection of the first and last segment
 			Line line1 = new Line(this.points.get(0), this.points.get(1));
 			Line line2 = new Line(this.points.get(size-1), this.points.get(size-2));
 			face.getPoints().add(Geometry.intersection(line1, line2));

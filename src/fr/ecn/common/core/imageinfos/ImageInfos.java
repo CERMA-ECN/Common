@@ -5,6 +5,11 @@ import java.util.List;
 
 import fr.ecn.common.core.geometry.Point;
 
+/**
+ * @author jerome
+ *
+ * A class to store informations about an image
+ */
 public class ImageInfos implements Serializable {
 	/**
 	 * 

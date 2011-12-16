@@ -6,14 +6,14 @@ import android.graphics.Matrix;
 
 public class BitmapLoader {
 	
-	public static final int maxDim = 600;
+	public static final int maxDim = 1000;
 	
 	/**
-	 * Load an image and resize it if its height or width is greater than maxDim
+	 * Load a bitmap and resize it if its height or width is greater than maxDim
 	 * 
 	 * @param path
 	 * @param maxDim
-	 * @return
+	 * @return an object that contain the resized bitmap and the scale factor
 	 */
 	public static ResizedBitmap loadResized(String path, int maxDim) {
 		Bitmap bitmap = BitmapFactory.decodeFile(path);

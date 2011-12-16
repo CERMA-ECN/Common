@@ -1,5 +1,10 @@
 package fr.ecn.common.core.geometry;
 
+/**
+ * @author jerome
+ *
+ * A class to compute distances between different objects.
+ */
 public class Distance {
 	
 	public static double distance(Point p1, Point p2) {

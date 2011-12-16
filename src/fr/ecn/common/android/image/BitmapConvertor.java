@@ -4,6 +4,11 @@ import android.graphics.Bitmap;
 
 import fr.ecn.common.core.image.ColorImage;
 
+/**
+ * @author jerome
+ *
+ * A class that contains methods to get an image from a bitmap and a bitmap from an image
+ */
 public class BitmapConvertor {
 
 	public static ColorImage bitmapToImage(Bitmap bitmap) {

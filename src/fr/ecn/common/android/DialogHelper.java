@@ -7,6 +7,12 @@ import android.content.DialogInterface.OnClickListener;
 
 public class DialogHelper {
 	
+	/**
+	 * Show an error dialog with the given message then end the activity
+	 * 
+	 * @param activity
+	 * @param message
+	 */
 	public static void errorDialog(final Activity activity, String message) {
 		new AlertDialog.Builder(activity)
 			.setTitle("Erreur")

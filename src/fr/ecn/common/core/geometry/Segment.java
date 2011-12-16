@@ -23,24 +23,24 @@ public class Segment {
 	}
 
 	/**
-	 * @param p1 the p1 to set
-	 */
-	public void setP1(Point p1) {
-		this.p1 = p1;
-	}
-
-	/**
 	 * @return the p2
 	 */
 	public Point getP2() {
 		return p2;
 	}
-
+	
 	/**
-	 * @param p2 the p2 to set
+	 * @return the line passing through the 2 points of this segment
 	 */
-	public void setP2(Point p2) {
-		this.p2 = p2;
+	public Line getLine() {
+		return new Line(this.p1, this.p2);
 	}
 	
+	public double getXMin() {
+		return Math.min(p1.getX(), p2.getX());
+	}
+	
+	public double getXMax() {
+		return Math.max(p1.getX(), p2.getX());
+	}
 }

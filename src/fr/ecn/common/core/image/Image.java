@@ -6,6 +6,7 @@ package fr.ecn.common.core.image;
 /**
  * @author jerome
  *
+ * A class that represent an image for computation purpose
  */
 public abstract class Image {
 	
@@ -51,9 +52,9 @@ public abstract class Image {
      * Return a string describing the image.
      * @return the string.
      */
-    public String toString()
-    {
-        return super.toString() + " (" + getWidth() + "x" + getHeight() + ")";
-    }
+	@Override
+	public String toString() {
+		return this.getClass().getName() + " [height=" + height + ", width=" + width + "]";
+	}
 	
 }

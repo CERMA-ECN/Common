@@ -12,10 +12,8 @@ public class Line {
 	// on représente les droites non verticales par l'equation y=ax+b,
 	// les attributs d'une droite seront donc les coefficients a et b.
 	// =============================================================================//
-	// POUR L'INSTANT CES ATTRIBUTS SONT PUBLICS POUR NE PAS AVOIR BESOIN DE
-	// CREER DES METHODES POUR Y ACCEDER OU LES MODIFIER
-	public double a;
-	public double b;
+	protected double a;
+	protected double b;
 
 	// =============================================================================//
 	// Constructeurs
@@ -48,6 +46,20 @@ public class Line {
 	}
 
 	/**
+	 * @return the slope of the line
+	 */
+	public double getA() {
+		return a;
+	}
+
+	/**
+	 * @return the the y-intercept of the line
+	 */
+	public double getB() {
+		return b;
+	}
+
+	/**
 	 * Calcul de y l'ordonné d'un point appartenant à la droite et d'abscisse x.
 	 * Retourne le point obtenu
 	 * 
@@ -76,5 +88,13 @@ public class Line {
 		// on peut alors avoir n'importe quelle valeur de x, on choisit
 		// arbitrairement 0.
 		return new Point(x, y);
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Line [a=" + a + ", b=" + b + "]";
 	}
 }
